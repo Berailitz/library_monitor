@@ -1,5 +1,6 @@
 library_monitor/config.py
 log/
+database/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
