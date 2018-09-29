@@ -1,6 +1,6 @@
 # BUPT Library Monitor
 
-Monitor books in BUPT's library, send telegram messages if they become avaiable.
+Monitor books in BUPT's library, send telegram messages if they become available.
 
 ### Features
  - Support multiply users
