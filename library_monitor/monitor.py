@@ -4,7 +4,7 @@ import json
 import logging
 from typing import List, Dict
 import requests
-from .config import BOOK_PAGE_REFERER, BOOK_STATE_API, MESSAGE_TEMPLATE, NOTICE_COUNTER, TARGET_STATE
+from .config import BOOK_PAGE_REFERER, BOOK_STATE_API, DAILY_REPORT_TEMPLATE, MESSAGE_TEMPLATE, NOTICE_COUNTER, TARGET_STATE
 from .models import Book
 from .queued_bot import create_queued_bot
 from .sql_handler import SQLHandler, SQLManager
@@ -54,6 +54,18 @@ class LibraryMonitor(object):
         logging.info(f"Send message: `{text}`")
         self.bot.send_message(chat_id=chat_id, text=text)
 
+    def report_status(self):
+        """
+        Send monitor report to users."""
+        for chat in self.sql_handler.get_chats():
+            self.send_message(
+                chat_id=chat.id,
+                text=DAILY_REPORT_TEMPLATE.format(
+                    book_counter=len(chat.books),
+                    book_names="、".join(
+                        [f'《{book.name}》' for book in chat.books])
+                ))
+
     def run(self) -> None:
         for chat in self.sql_handler.get_chats():
             for target_book in chat.books:
@@ -75,6 +87,7 @@ class LibraryMonitor(object):
                             notice_index=NOTICE_COUNTER - target_book.notice_counter + 1,
                             max_notice_index=NOTICE_COUNTER))
                 else:
+                    self.sql_handler.reset_notice_counter(target_book)
                     logging.info(
                         f"LibraryMonitor: Book NOT found. ({target_book})")
 

@@ -5,7 +5,7 @@ from typing import Callable, List
 from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import joinedload, relationship, scoped_session, sessionmaker
 from sqlalchemy.orm.session import Session
-from .config import DATABASE_URI
+from .config import DATABASE_URI, NOTICE_COUNTER
 from .models import Base, Book, Chat, Location
 
 
@@ -76,6 +76,15 @@ class SQLHandler(object):
         if online_book.notice_counter == 0:
             logging.warning(f"LibraryMonitor: Delete book `{target_book}`")
             my_session.delete(online_book)
+        my_session.commit()
+
+    @load_session
+    def reset_notice_counter(my_session: Session, target_book: Book):
+        """
+        Reset `notice_counter` to `NOTICE_COUNTER`."""
+        online_book = my_session.query(Book).filter(Book.id == target_book.id).filter(
+            Book.location == target_book.location).filter(Book.chat_id == target_book.chat_id).one()
+        online_book.notice_counter = NOTICE_COUNTER
         my_session.commit()
 
     @load_session

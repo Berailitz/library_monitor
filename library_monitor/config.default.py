@@ -1,7 +1,8 @@
 from pathlib import Path
 
 
-SYNC_INTERVEL = 600
+SYNC_INTERVAL = 600
+REPORT_CYCLE = 24 * 60 * 60 / SYNC_INTERVAL
 LOG_FLODER = 'log'
 DATABASE_FOLDER = "database"
 DATABASE_PATH = Path(DATABASE_FOLDER, 'library_monitor.db')
@@ -15,3 +16,4 @@ PROXY_URL = 'socks5://127.0.0.1:1080' # str or None
 BOOK_PAGE_REFERER = 'http://opac.bupt.edu.cn:8080/opac_two/search2/s_detail.jsp?sid={book_id}'
 BOOK_STATE_API = 'http://opac.bupt.edu.cn:8080/opac_two/guancang.do'
 MESSAGE_TEMPLATE = '图书到馆：`{book_location}`等可借出`{book_counter}`本《{book_name}》({book_id}, {notice_index}/{max_notice_index})。'
+DAILY_REPORT_TEMPLATE = '图书监控中：共`{book_counter}`本（`{book_names}`）。'
