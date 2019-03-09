@@ -30,8 +30,8 @@ def initialize_database():
     SessionMaker = sessionmaker(bind=engine)
     session = SessionMaker()
     for table in tables:
-        logging.info(f'Importing table `{table.__name__}`.')
-        with open(Path(DATABASE_FOLDER, f'{table.__name__}.json'), encoding="utf8") as json_file:
+        logging.info(f'Importing table `{table.__tablename__}`.')
+        with open(Path(DATABASE_FOLDER, f'{table.__tablename__}.json'), encoding="utf8") as json_file:
             for record in json.load(json_file):
                 session.add(table(**record))
     session.commit()
